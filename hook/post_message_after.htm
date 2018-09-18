@@ -1,0 +1,78 @@
+<style>
+    #message {
+        display: none;
+    }
+
+    .modal {
+        z-index: 10050;
+    }
+</style>
+<input type="hidden" name="doctype" value="0">
+<div class="form-group">
+    <div id="editor"></div>
+</div>
+<script src="<?php echo $conf['view_url'];?>js/jquery-3.1.0.js<?php echo $static_version;?>"></script>
+<script src="plugin/zl_editor/js/wangEditor.min.js"></script>
+<script>
+    (function () {
+        function detectmob() {
+            if( navigator.userAgent.match(/Android/i)
+            || navigator.userAgent.match(/webOS/i)
+            || navigator.userAgent.match(/iPhone/i)
+            || navigator.userAgent.match(/iPad/i)
+            || navigator.userAgent.match(/iPod/i)
+            || navigator.userAgent.match(/BlackBerry/i)
+            || navigator.userAgent.match(/Windows Phone/i)
+            ){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        var E = window.wangEditor
+        var editor = new E('#editor')
+        var message = document.getElementById('message')
+        editor.customConfig = {
+            customUploadImg: function (files, insert) {
+                var reader = new FileReader();
+                reader.readAsDataURL(files[0]);
+                reader.onload = function (e) {
+                    var img = new Image();
+                    img.src = this.result;
+                    var data = {
+                        is_image: 1,
+                        filetype: 'jpg',
+                        width: img.width,
+                        height: img.height,
+                        data: this.result,
+                        name: 'postimage.png'
+                    }
+                    $.post('<?php echo url("attach-create") ?>', data, function(result) {
+                        console.log(result)
+                        insert(result.message.url)
+                    }, 'json')
+                }
+            },
+            onchange: function (html) {
+                // 监控变化，同步更新到 textarea
+                message.value = html
+            }
+        }
+        if (detectmob()) {
+            editor.customConfig.menus = [
+                'head',  // 标题
+                'bold',  // 粗体
+                'fontSize',  // 字号
+                'link',  // 插入链接
+                'image',  // 插入图片
+                'undo',  // 撤销
+                'redo'  // 重复
+            ]
+        }
+        editor.create()
+        editor.txt.html(message.value)
+        // 初始化 textarea 的值
+        message.value = editor.txt.html()
+    })()
+</script>

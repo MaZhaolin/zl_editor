@@ -1,0 +1,10 @@
+{
+    "name": "富文本编辑器",
+    "brief": "此插件基于开源编辑器WangEditor开发，插件介绍地址: <br>更多优质主题、插件请点击：<a href='https://zhaolindev.com'  target='_blank'>召灵网</a>",
+    "version": "1.0",
+    "bbs_version": "4.0",
+    "installed": 1,
+    "enable": 1,
+    "hooks_rank": [],
+    "dependencies": []
+}
